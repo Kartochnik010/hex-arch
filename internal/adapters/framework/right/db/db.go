@@ -21,6 +21,22 @@ func NewAdapter(driverName string, dataSourceName string) (*Adapter, error) {
 		return nil, err
 	}
 
+	statement, err := db.Prepare(`
+		CREATE TABLE IF NOT EXISTS arith_history
+			(
+				id INTEGER PRIMARY KEY,
+				date DATE,
+				answer INTEGER,
+				operation TEXT
+			)
+	`)
+	if err != nil {
+		return nil, err
+	}
+	_, err = statement.Exec()
+	if err != nil {
+		return nil, err
+	}
 	return &Adapter{db: db}, nil
 }
 
