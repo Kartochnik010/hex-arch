@@ -25,11 +25,41 @@ func (api Adapter) GetAddition(a int32, b int32) (int32, error) {
 	return res, nil
 }
 func (api Adapter) GetSubtraction(a int32, b int32) (int32, error) {
-	return api.arith.Subtraction(a, b)
+	res, err := api.arith.Subtraction(a, b)
+	if err != nil {
+		return 0, err
+	}
+
+	err = api.db.AddToHistory(res, "subtraction")
+	if err != nil {
+		return 0, err
+	}
+
+	return res, nil
 }
 func (api Adapter) GetMultiplication(a int32, b int32) (int32, error) {
-	return api.arith.Multiplication(a, b)
+	res, err := api.arith.Multiplication(a, b)
+	if err != nil {
+		return 0, err
+	}
+
+	err = api.db.AddToHistory(res, "multiplication")
+	if err != nil {
+		return 0, err
+	}
+
+	return res, nil
 }
 func (api Adapter) GetDivision(a int32, b int32) (int32, error) {
-	return api.arith.Division(a, b)
+	res, err := api.arith.Division(a, b)
+	if err != nil {
+		return 0, err
+	}
+
+	err = api.db.AddToHistory(res, "division")
+	if err != nil {
+		return 0, err
+	}
+
+	return res, nil
 }
