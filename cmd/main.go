@@ -34,17 +34,20 @@ var (
 	core        ports.ArithmeticPort
 	appAdapter  ports.APIPort
 	grpcAdapter ports.GRPCPort
+
+	err error
 )
 
 func main() {
-	dbAdapter, err := db.NewAdapter(cfg.db.driver, cfg.db.dns)
+	dbAdapter, err = db.NewAdapter(cfg.db.driver, cfg.db.dns)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer dbAdapter.CloseDBConnection()
+
 	core = arithmetic.NewAdapter()
 	appAdapter = api.NewAdapter(core, dbAdapter)
 	grpcAdapter = rpc.NewAdapter(appAdapter)
-	grpcAdapter.Run()
 
+	grpcAdapter.Run()
 }
