@@ -7,8 +7,8 @@ type Adapter struct {
 	db    ports.DbPort
 }
 
-func NewAdapter(arith ports.ArithmeticPort) *Adapter {
-	return &Adapter{arith: arith}
+func NewAdapter(arith ports.ArithmeticPort, db ports.DbPort) *Adapter {
+	return &Adapter{arith: arith, db: db}
 }
 
 func (api Adapter) GetAddition(a int32, b int32) (int32, error) {

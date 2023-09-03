@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package pb;
 
-// protoc --go_out=plugins:grpc:directory
 option go_package = "./pb";
 
 message Answer {

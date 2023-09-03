@@ -1,22 +1,50 @@
 package main
 
 import (
-	"fmt"
+	"hex/internal/adapters/app/api"
 	arithmetic "hex/internal/adapters/core"
+	rpc "hex/internal/adapters/framework/left/grpc"
+	"hex/internal/adapters/framework/right/db"
 	"hex/internal/ports"
 	"log"
-	"time"
+	"os"
 )
 
 // "internal/adapters/core/arithmetic"
 
-func main() {
-	t := time.Now()
-	defer func() {
-		log.Println("Executed in ", time.Since(t))
-	}()
-	var core ports.ArithmeticPort
+type config struct {
+	db struct {
+		driver string
+		dns    string
+	}
+}
 
+var (
+	cfg = config{
+		db: struct {
+			driver string
+			dns    string
+		}{
+			driver: os.Getenv("DB_DRIVER"),
+			dns:    os.Getenv("DB_DSN"),
+		},
+	}
+
+	dbAdapter   ports.DbPort
+	core        ports.ArithmeticPort
+	appAdapter  ports.APIPort
+	grpcAdapter ports.GRPCPort
+)
+
+func main() {
+	dbAdapter, err := db.NewAdapter(cfg.db.driver, cfg.db.dns)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbAdapter.CloseDBConnection()
 	core = arithmetic.NewAdapter()
-	fmt.Println(core.Addition(1, 2))
+	appAdapter = api.NewAdapter(core, dbAdapter)
+	grpcAdapter = rpc.NewAdapter(appAdapter)
+	grpcAdapter.Run()
+
 }

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package pb;
+
+import "number_msg.proto";
+
+option go_package = "./pb";
+
+service ArithmeticService {
+    rpc GetAddition(OperationParameters) returns (Answer) {}
+    rpc GetSubtraction(OperationParameters) returns (Answer) {}
+    rpc GetMultiplication(OperationParameters) returns (Answer) {}
+    rpc GetDivision(OperationParameters) returns (Answer) {}
+}
+
+// protoc  --go_out=internal/adapters/framework/left/grpc \
+//         --proto_path=internal/adapters/framework/left/grpc/proto \
+//         internal/adapters/framework/left/grpc/proto/number_msg.proto
+// protoc  --go-grpc_out=require_unimplemented_servers=false:internal/adapters/framework/left/grpc \
+//         --proto_path=internal/adapters/framework/left/grpc/proto \
+//         internal/adapters/framework/left/grpc/proto/arithmtic_svc.proto
