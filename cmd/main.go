@@ -20,16 +20,6 @@ type config struct {
 }
 
 var (
-	cfg = config{
-		db: struct {
-			driver string
-			dns    string
-		}{
-			driver: os.Getenv("DB_DRIVER"),
-			dns:    os.Getenv("DB_DSN"),
-		},
-	}
-
 	dbAdapter   ports.DbPort
 	core        ports.ArithmeticPort
 	appAdapter  ports.APIPort
@@ -39,7 +29,7 @@ var (
 )
 
 func main() {
-	dbAdapter, err = db.NewAdapter(cfg.db.driver, cfg.db.dns)
+	dbAdapter, err = db.NewAdapter(os.Getenv("DB_DRIVER"), os.Getenv("DB_DSN"))
 	if err != nil {
 		log.Fatal(err)
 	}
