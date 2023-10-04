@@ -12,14 +12,14 @@ import (
 	"os"
 	"testing"
 
-	"google.golang.com/grpc/test/buffconn"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/test/bufconn"
 )
 
 const buffSize = 1024 * 1024
 
 var (
-	lis *buffconn.Listener
+	lis *bufconn.Listener
 
 	dbAdapter   ports.DbPort
 	core        ports.ArithmeticPort
@@ -30,7 +30,7 @@ var (
 )
 
 func init() {
-	lis = buffconn.Lister(buffSize)
+	lis = bufconn.Listen(buffSize)
 
 	dbAdapter, err = db.NewAdapter(os.Getenv("DB_DRIVER"), os.Getenv("DB_DSN"))
 	if err != nil {
